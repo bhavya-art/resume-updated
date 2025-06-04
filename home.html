@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Resumix - Professional Resume Builder</title>
+    <link rel="stylesheet" href="styles.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+</head>
+<body>
+    <!-- Home Page -->
+    <div id="homePage">
+        <header>
+            <div class="container">
+                <div class="nav-container">
+                    <div class="logo">Resumix</div>
+                    <nav>
+                        <ul>
+                            <li><a href="#home">Home</a></li>
+                            <li><a href="#templates">Templates</a></li>
+                            <li><a href="#" class="start-btn" onclick="goToBuilder()">Start Now</a></li>
+                        </ul>
+                    </nav>
+                </div>
+            </div>
+        </header>
+
+        <section class="hero" id="home">
+            <div class="container">
+                <div class="hero-content">
+                    <div class="hero-text slide-in-left">
+                        <h1>Create Your Perfect Resume</h1>
+                        <p>Build professional resumes in minutes with our easy-to-use resume builder. Choose from beautiful templates and land your dream job.</p>
+                        <a href="#" class="cta-button" onclick="goToBuilder()">Get Started Free</a>
+                    </div>
+                    <div class="hero-image slide-in-right">
+                        <div class="resume-preview">
+                            <h3>John Doe</h3>
+                            <div class="subtitle">Software Developer</div>
+                            <div class="section">
+                                <div class="section-title">EXPERIENCE</div>
+                                <div class="content-line"></div>
+                                <div class="content-line"></div>
+                                <div class="content-line"></div>
+                            </div>
+                            <div class="section">
+                                <div class="section-title">EDUCATION</div>
+                                <div class="content-line"></div>
+                                <div class="content-line"></div>
+                            </div>
+                            <div class="section">
+                                <div class="section-title">SKILLS</div>
+                                <div class="content-line"></div>
+                                <div class="content-line"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="templates" id="templates">
+            <div class="container">
+                <h2 class="section-title fade-in">Choose Your Template</h2>
+                <div class="templates-grid">
+                    <div class="template-card fade-in" onclick="selectTemplate('modern')">
+                        <div class="template-preview template-modern">
+                            <div style="color: white; font-weight: bold; text-align: center;">Modern Professional<br><small>Clean & Contemporary</small></div>
+                        </div>
+                        <div class="template-info">
+                            <h3>Modern Professional</h3>
+                            <p>Clean and contemporary design perfect for any industry</p>
+                        </div>
+                    </div>
+                    <div class="template-card fade-in" onclick="selectTemplate('classic')">
+                        <div class="template-preview template-classic">
+                            <div style="color: white; font-weight: bold; text-align: center;">Classic<br><small>Traditional & Trusted</small></div>
+                        </div>
+                        <div class="template-info">
+                            <h3>Classic</h3>
+                            <p>Traditional format loved by HR professionals</p>
+                        </div>
+                    </div>
+                    <div class="template-card fade-in" onclick="selectTemplate('creative')">
+                        <div class="template-preview template-creative">
+                            <div style="color: white; font-weight: bold; text-align: center;">Creative<br><small>Bold & Colorful</small></div>
+                        </div>
+                        <div class="template-info">
+                            <h3>Creative</h3>
+                            <p>Stand out with this unique and colorful design</p>
+                        </div>
+                    </div>
+                    <div class="template-card fade-in" onclick="selectTemplate('minimal')">
+                        <div class="template-preview template-minimal">
+                            <div style="color: #333; font-weight: bold; text-align: center;">Minimal<br><small>Simple & Elegant</small></div>
+                        </div>
+                        <div class="template-info">
+                            <h3>Minimal</h3>
+                            <p>Simple and elegant design that highlights your content</p>
+                        </div>
+                    </div>
+                    <div class="template-card fade-in" onclick="selectTemplate('executive')">
+                        <div class="template-preview template-executive">
+                            <div style="color: white; font-weight: bold; text-align: center;">Executive<br><small>Professional & Powerful</small></div>
+                        </div>
+                        <div class="template-info">
+                            <h3>Executive</h3>
+                            <p>Professional template for senior positions</p>
+                        </div>
+                    </div>
+                    <div class="template-card fade-in" onclick="selectTemplate('tech')">
+                        <div class="template-preview template-tech">
+                            <div style="color: white; font-weight: bold; text-align: center;">Tech<br><small>Modern & Digital</small></div>
+                        </div>
+                        <div class="template-info">
+                            <h3>Tech</h3>
+                            <p>Modern design tailored for tech professionals</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <footer>
+            <div class="container">
+                <div class="footer-content">
+                    <div class="footer-logo">Resumix</div>
+                    <a href="https://github.com" class="github-link" target="_blank">GitHub</a>
+                </div>
+            </div>
+        </footer>
+    </div>
+
+    <!-- Resume Builder -->
+    <div id="builderPage" class="builder-container">
+        <div class="builder-layout">
+            <div class="left-panel">
+                <div class="panel-header">
+                    <button class="back-btn" onclick="goBackHome()" title="Back to Home">←</button>
+                    <h2 style="margin: 0; color: #333;">Resume Builder</h2>
+                </div>
+
+                <!-- Personal Information -->
+                <div class="form-section">
+                    <h3>👤 Personal Information</h3>
+                    <div class="form-group">
+                        <label>Full Name</label>
+                        <input type="text" id="fullName" placeholder="Enter your full name" oninput="updatePreview()">
+                    </div>
+                    <div class="form-group">
+                        <label>Email</label>
+                        <input type="email" id="email" placeholder="your.email@example.com" oninput="updatePreview()">
+                    </div>
+                    <div class="form-group">
+                        <label>Phone</label>
+                        <input type="tel" id="phone" placeholder="+1 (555) 123-4567" oninput="updatePreview()">
+                    </div>
+                    <div class="form-group">
+                        <label>Address</label>
+                        <input type="text" id="address" placeholder="City, State" oninput="updatePreview()">
+                    </div>
+                    <div class="form-group">
+                        <label>Professional Summary</label>
+                        <textarea id="summary" placeholder="Brief summary of your professional background and key achievements" oninput="updatePreview()"></textarea>
+                    </div>
+                </div>
+
+                <!-- Experience -->
+                <div class="form-section">
+                    <h3>💼 Work Experience</h3>
+                    <div id="experienceContainer"></div>
+                    <button class="add-btn" onclick="addExperience()">+ Add Experience</button>
+                </div>
+
+                <!-- Education -->
+                <div class="form-section">
+                    <h3>🎓 Education</h3>
+                    <div id="educationContainer"></div>
+                    <button class="add-btn" onclick="addEducation()">+ Add Education</button>
+                </div>
+
+                <!-- Skills -->
+                <div class="form-section">
+                    <h3>🚀 Skills</h3>
+                    <div class="form-group">
+                        <label>Add Skills (Press Enter to add)</label>
+                        <input type="text" id="skillInput" placeholder="Enter a skill and press Enter" onkeypress="addSkill(event)">
+                    </div>
+                    <div id="skillsList"></div>
+                </div>
+
+                <!-- Customization -->
+                <div class="form-section">
+                    <h3>🎨 Customize</h3>
+                    <div class="form-group">
+                        <label>Template Color</label>
+                        <div class="color-picker">
+                            <div class="color-option active" style="background: #223030;" onclick="changeColor('#223030')" data-color="#223030"></div>
+                            <div class="color-option" style="background: #523D35;" onclick="changeColor('#523D35')" data-color="#523D35"></div>
+                            <div class="color-option" style="background: #959D90;" onclick="changeColor('#959D90')" data-color="#959D90"></div>
+                            <div class="color-option" style="background: #BBA58F;" onclick="changeColor('#BBA58F')" data-color="#BBA58F"></div>
+                            <div class="color-option" style="background: #E8D9CD;" onclick="changeColor('#E8D9CD')" data-color="#E8D9CD"></div>
+                            <div class="color-option" style="background: #EFEFEF;" onclick="changeColor('#EFEFEF')" data-color="#EFEFEF"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="right-panel">
+                <div class="top-bar">
+                    <h3 style="margin: 0; color: #333;">Resume Preview</h3>
+                    <button class="download-btn" onclick="downloadResume()">📥 Download PDF</button>
+                </div>
+
+                <div class="preview-area">
+                    <div class="resume-container" id="resumePreview">
+                        <div class="resume-header">
+                            <h1 class="resume-name" id="previewName">Your Name</h1>
+                            <div class="resume-contact" id="previewContact">
+                                <span id="previewEmail">your.email@example.com</span> | 
+                                <span id="previewPhone">+1 (555) 123-4567</span> | 
+                                <span id="previewAddress">City, State</span>
+                            </div>
+                        </div>
+
+                        <div class="resume-section" id="summarySection" style="display: none;">
+                            <h3>Professional Summary</h3>
+                            <p id="previewSummary"></p>
+                        </div>
+
+                        <div class="resume-section" id="experienceSection" style="display: none;">
+                            <h3>Work Experience</h3>
+                            <div id="previewExperience"></div>
+                        </div>
+
+                        <div class="resume-section" id="educationSection" style="display: none;">
+                            <h3>Education</h3>
+                            <div id="previewEducation"></div>
+                        </div>
+
+                        <div class="resume-section" id="skillsSection" style="display: none;">
+                            <h3>Skills</h3>
+                            <div class="skills-container" id="previewSkills"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
