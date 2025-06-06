@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Resume Builder - Resumix</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="builder.css">
+    <!-- External Libraries for PDF Generation -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+</head>
+<body class="builder-body">
+    <!-- Builder Header -->
+    <header class="builder-header">
+        <div class="builder-nav">
+            <div class="builder-nav-left">
+                <a href="index.html" class="back-home">
+                    <span class="back-icon">←</span>
+                    <span>Back to Home</span>
+                </a>
+                <div class="builder-logo">
+                    <span class="logo-icon">📄</span>
+                    <span>Resumix Builder</span>
+                </div>
+            </div>
+            
+            <div class="builder-nav-right">
+                <button class="save-btn" onclick="saveResume()" title="Save Resume (Ctrl+S)">
+                    💾 Save
+                </button>
+                <button class="download-btn" onclick="downloadResume()" title="Download PDF (Ctrl+P)">
+                    📥 Download PDF
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Builder Main Content -->
+    <main class="builder-main">
+        <!-- Left Panel: Form Controls -->
+        <div class="builder-sidebar">
+            <div class="sidebar-content">
+                <!-- Template Selection -->
+                <div class="form-section">
+                    <h3>📋 Template Style</h3>
+                    <div class="template-selector">
+                        <select id="templateSelect" onchange="changeTemplate()">
+                            <option value="modern">Modern Professional</option>
+                            <option value="executive">Classic Executive</option>
+                            <option value="creative">Creative Designer</option>
+                            <option value="minimal">Minimal Clean</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- Personal Information -->
+                <div class="form-section">
+                    <h3>👤 Personal Information</h3>
+                    <div class="form-group">
+                        <label>Full Name *</label>
+                        <input type="text" id="fullName" placeholder="Enter your full name" oninput="updatePreview()" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Professional Title *</label>
+                        <input type="text" id="jobTitle" placeholder="e.g. Software Engineer, Marketing Manager" oninput="updatePreview()" required>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Email *</label>
+                            <input type="email" id="email" placeholder="your.email@example.com" oninput="updatePreview()" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Phone *</label>
+                            <input type="tel" id="phone" placeholder="+1 (555) 123-4567" oninput="updatePreview()" required>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>Location</label>
+                        <input type="text" id="location" placeholder="City, State" oninput="updatePreview()">
+                    </div>
+                    <div class="form-group">
+                        <label>LinkedIn Profile</label>
+                        <input type="url" id="linkedin" placeholder="https://linkedin.com/in/yourname" oninput="updatePreview()">
+                    </div>
+                    <div class="form-group photo-upload">
+                        <label>Profile Photo (Optional)</label>
+                        <div class="photo-upload-area">
+                            <input type="file" id="photoUpload" accept="image/*" onchange="handlePhotoUpload()" style="display: none;">
+                            <button type="button" class="photo-btn" onclick="document.getElementById('photoUpload').click()">
+                                📷 Upload Photo
+                            </button>
+                            <div id="photoPreview" class="photo-preview" style="display: none;">
+                                <img id="photoImg" src="" alt="Profile Photo">
+                                <button type="button" class="remove-photo" onclick="removePhoto()">×</button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>Professional Summary</label>
+                        <textarea id="summary" placeholder="Brief summary of your professional background, key achievements, and career objectives (2-3 sentences)" rows="4" oninput="updatePreview()"></textarea>
+                        <small class="form-hint">Keep it concise and impactful - this is often the first thing recruiters read</small>
+                    </div>
+                </div>
+
+                <!-- Work Experience -->
+                <div class="form-section">
+                    <h3>💼 Work Experience</h3>
+                    <div id="experienceContainer">
+                        <!-- Dynamic experience entries will be added here -->
+                    </div>
+                    <button class="add-btn" onclick="addExperience()">+ Add Experience</button>
+                </div>
+
+                <!-- Education -->
+                <div class="form-section">
+                    <h3>🎓 Education</h3>
+                    <div id="educationContainer">
+                        <!-- Dynamic education entries will be added here -->
+                    </div>
+                    <button class="add-btn" onclick="addEducation()">+ Add Education</button>
+                </div>
+
+                <!-- Skills -->
+                <div class="form-section">
+                    <h3>🚀 Skills</h3>
+                    <div class="form-group">
+                        <label>Add Skills (Press Enter or click + to add)</label>
+                        <div class="skill-input-container">
+                            <input type="text" id="skillInput" placeholder="Enter a skill (e.g. JavaScript, Project Management)" onkeypress="addSkillOnEnter(event)">
+                            <button type="button" class="skill-add-btn" onclick="addSkillFromInput()">+</button>
+                        </div>
+                    </div>
+                    <div id="skillsList" class="skills-list">
+                        <!-- Dynamic skills will be added here -->
+                    </div>
+                    <div class="skill-suggestions">
+                        <small>💡 Popular skills:</small>
+                        <div class="skill-chips">
+                            <span class="skill-chip" onclick="addSkill('Communication')">Communication</span>
+                            <span class="skill-chip" onclick="addSkill('Leadership')">Leadership</span>
+                            <span class="skill-chip" onclick="addSkill('Project Management')">Project Management</span>
+                            <span class="skill-chip" onclick="addSkill('Problem Solving')">Problem Solving</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Customization -->
+                <div class="form-section">
+                    <h3>🎨 Customize Colors</h3>
+                    <div class="form-group">
+                        <label>Choose Theme Color</label>
+                        <div class="color-picker">
+                            <div class="color-option active" style="background: #223030;" onclick="changeColor('#223030')" data-color="#223030" title="Forest Green"></div>
+                            <div class="color-option" style="background: #523D35;" onclick="changeColor('#523D35')" data-color="#523D35" title="Rich Brown"></div>
+                            <div class="color-option" style="background: #959D90;" onclick="changeColor('#959D90')" data-color="#959D90" title="Sage Green"></div>
+                            <div class="color-option" style="background: #BBA58F;" onclick="changeColor('#BBA58F')" data-color="#BBA58F" title="Warm Beige"></div>
+                            <div class="color-option" style="background: #2c3e50;" onclick="changeColor('#2c3e50')" data-color="#2c3e50" title="Navy Blue"></div>
+                            <div class="color-option" style="background: #8e44ad;" onclick="changeColor('#8e44ad')" data-color="#8e44ad" title="Purple"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Right Panel: Live Preview -->
+        <div class="builder-preview">
+            <div class="preview-container">
+                <div class="preview-header">
+                    <h3>Live Preview</h3>
+                    <div class="preview-controls">
+                        <button class="zoom-btn" onclick="adjustZoom(-10)" title="Zoom Out">−</button>
+                        <span id="zoomLevel">100%</span>
+                        <button class="zoom-btn" onclick="adjustZoom(10)" title="Zoom In">+</button>
+                    </div>
+                </div>
+                
+                <div class="preview-area" id="previewArea">
+                    <div class="resume-container" id="resumePreview">
+                        <!-- Resume content will be dynamically generated here based on selected template -->
+                        <div id="resumeContent">
+                            <!-- Template content will be injected here -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Progress Indicator -->
+    <div class="progress-indicator">
+        <div class="progress-step completed" data-step="1">
+            <span class="step-number">1</span>
+            <span class="step-label">Personal Info</span>
+        </div>
+        <div class="progress-step" data-step="2">
+            <span class="step-number">2</span>
+            <span class="step-label">Experience</span>
+        </div>
+        <div class="progress-step" data-step="3">
+            <span class="step-number">3</span>
+            <span class="step-label">Education</span>
+        </div>
+        <div class="progress-step" data-step="4">
+            <span class="step-number">4</span>
+            <span class="step-label">Skills</span>
+        </div>
+        <div class="progress-step" data-step="5">
+            <span class="step-number">5</span>
+            <span class="step-label">Download</span>
+        </div>
+    </div>
+
+    <!-- Success Modal -->
+    <div id="successModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>🎉 Resume Saved Successfully!</h3>
+                <button class="modal-close" onclick="closeModal()">&times;</button>
+            </div>
+            <div class="modal-body">
+                <p>Your resume has been saved and is ready to download.</p>
+                <div class="modal-actions">
+                    <button class="btn-primary" onclick="downloadResume()">📥 Download Now</button>
+                    <button class="btn-secondary" onclick="closeModal()">Continue Editing</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="builder.js"></script>
+</body>
+</html>
